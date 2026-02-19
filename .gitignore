@@ -32,3 +32,6 @@ Thumbs.db
 
 # IDE
 .idea/
+
+# Claude Code local settings
+.claude/
