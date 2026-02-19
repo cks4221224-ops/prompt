@@ -13,33 +13,34 @@ prpt.ai를 벤치마킹한 AI 프롬프트 공유 커뮤니티
 
 ```
 prompt/
-├── main.py                  # FastAPI 앱, 라우터, 목업 데이터
-├── requirements.txt
-├── README.md
-└── mnt/user-data/outputs/prompt-hub/frontend/
-    ├── package.json
-    ├── next.config.js
-    ├── tailwind.config.js
-    ├── app/
-    │   ├── layout.tsx
-    │   ├── page.tsx               # / → /prompt/list 리다이렉트
-    │   ├── globals.css
-    │   └── prompt/
-    │       ├── list/page.tsx      # 프롬프트 목록
-    │       ├── [id]/page.tsx      # 프롬프트 상세
-    │       └── new/page.tsx       # 프롬프트 등록
-    ├── components/
-    │   ├── Navbar.tsx
-    │   ├── PromptCard.tsx
-    │   └── FilterSidebar.tsx
-    ├── lib/api.ts
-    └── types/index.ts
+├── app/                         # Next.js App Router
+│   ├── layout.tsx
+│   ├── page.tsx                 # / → /prompt/list 리다이렉트
+│   ├── globals.css
+│   └── prompt/
+│       ├── list/page.tsx        # 프롬프트 목록
+│       ├── [id]/page.tsx        # 프롬프트 상세
+│       └── new/page.tsx         # 프롬프트 등록
+├── components/
+│   ├── Navbar.tsx
+│   ├── PromptCard.tsx
+│   └── FilterSidebar.tsx
+├── lib/api.ts
+├── types/index.ts
+├── package.json
+├── next.config.js
+├── tailwind.config.js
+├── tsconfig.json
+└── backend/
+    ├── main.py                  # FastAPI 앱
+    └── requirements.txt
 ```
 
 ## 실행 방법
 
 **백엔드**
 ```bash
+cd backend
 pip install -r requirements.txt
 python main.py
 ```
@@ -47,11 +48,16 @@ python main.py
 
 **프론트엔드**
 ```bash
-cd mnt/user-data/outputs/prompt-hub/frontend
 npm install
 npm run dev
 ```
 → http://localhost:3000
+
+## 배포
+
+- **프론트엔드**: Vercel (루트 디렉토리 자동 인식)
+- **백엔드**: Render 등 Python 지원 플랫폼
+- 환경변수: `NEXT_PUBLIC_API_URL=https://your-backend.onrender.com`
 
 ## 주요 기능
 
