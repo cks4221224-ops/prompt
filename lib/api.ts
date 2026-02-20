@@ -46,6 +46,26 @@ export async function createPrompt(data: {
   });
 }
 
+export async function updatePrompt(id: number, data: {
+  title: string;
+  description: string;
+  content: string;
+  platform: string;
+  platform_type: string;
+  category: string;
+  tags: string[];
+}): Promise<Prompt> {
+  return apiFetch(`/api/prompts/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deletePrompt(id: number): Promise<void> {
+  return apiFetch(`/api/prompts/${id}`, { method: 'DELETE' });
+}
+
 export async function likePrompt(id: number): Promise<{ likes: number }> {
   return apiFetch(`/api/prompts/${id}/like`, { method: 'POST' });
 }

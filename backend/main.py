@@ -138,6 +138,25 @@ def create_prompt(data: PromptCreate):
     return new_prompt
 
 
+@app.put("/api/prompts/{prompt_id}", response_model=Prompt)
+def update_prompt(prompt_id: int, data: PromptCreate):
+    prompt = next((p for p in prompts_db if p["id"] == prompt_id), None)
+    if not prompt:
+        raise HTTPException(status_code=404, detail="Prompt not found")
+    prompt.update(data.model_dump())
+    return prompt
+
+
+@app.delete("/api/prompts/{prompt_id}")
+def delete_prompt(prompt_id: int):
+    global prompts_db
+    prompt = next((p for p in prompts_db if p["id"] == prompt_id), None)
+    if not prompt:
+        raise HTTPException(status_code=404, detail="Prompt not found")
+    prompts_db = [p for p in prompts_db if p["id"] != prompt_id]
+    return {"message": "deleted"}
+
+
 @app.post("/api/prompts/{prompt_id}/like")
 def like_prompt(prompt_id: int):
     prompt = next((p for p in prompts_db if p["id"] == prompt_id), None)

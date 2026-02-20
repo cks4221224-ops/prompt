@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getPrompt, likePrompt } from '@/lib/api';
 import { Prompt } from '@/types';
-import { Heart, Eye, ArrowLeft, Copy, Check, Tag, User } from 'lucide-react';
+import { Heart, Eye, ArrowLeft, Copy, Check, Tag, User, Pencil, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { deletePrompt } from '@/lib/api';
 
 const PLATFORM_COLORS: Record<string, string> = {
   ChatGPT: '#10A37F',
@@ -24,6 +26,7 @@ export default function PromptDetailPage() {
   const [copied, setCopied] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -41,6 +44,18 @@ export default function PromptDetailPage() {
     await navigator.clipboard.writeText(prompt.content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDelete = async () => {
+    if (!prompt || !confirm('정말 삭제하시겠습니까?')) return;
+    setDeleting(true);
+    try {
+      await deletePrompt(prompt.id);
+      router.push('/prompt/list');
+    } catch {
+      alert('삭제 중 오류가 발생했습니다.');
+      setDeleting(false);
+    }
   };
 
   const handleLike = async () => {
@@ -150,6 +165,21 @@ export default function PromptDetailPage() {
               >
                 <Heart size={15} fill={liked ? 'currentColor' : 'none'} />
                 {liked ? '좋아요 취소' : '좋아요'} · {likes.toLocaleString()}
+              </button>
+              <Link
+                href={`/prompt/${prompt.id}/edit`}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-[#1E1E2E] text-[#8B8BA8] hover:text-white transition-colors border border-transparent"
+              >
+                <Pencil size={15} />
+                수정하기
+              </Link>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-[#1E1E2E] text-[#8B8BA8] hover:bg-rose-500/10 hover:text-rose-400 transition-all border border-transparent disabled:opacity-50"
+              >
+                <Trash2 size={15} />
+                {deleting ? '삭제 중...' : '삭제하기'}
               </button>
             </div>
 
